@@ -1,0 +1,101 @@
+<iframe id="iframe" src="javascript:parent.audio" frameborder="0" style="display:none"></iframe>
+<header class="sm-navbar navbar navbar-fixed-top" id="top" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a  class="navbar-brand">Baidu Music Player</a>
+        </div>
+        <nav id="bs-navbar" class="collapse navbar-collapse" ng-init="loadNewSongs(20);">
+            <ul class="nav navbar-nav">
+                <li ng-click="loadNewSongs(20)"><a ng-class="{active:song_type===20}">华语金曲榜</a></li>
+                <li ng-click="loadNewSongs(21)"><a ng-class="{active:song_type===21}">欧美金曲榜</a></li>
+                <li ng-click="loadNewSongs(22)"><a ng-class="{active:song_type===22}">经典老歌榜</a></li>
+                <li ng-click="loadNewSongs(23)"><a ng-class="{active:song_type===23}">情歌对唱榜</a></li>
+                <li ng-click="loadNewSongs(24)"><a ng-class="{active:song_type===24}">影视金曲榜</a></li>
+                <li ng-click="loadNewSongs(25)"><a ng-class="{active:song_type===25}">网络歌曲榜</a></li>
+                <li ng-click="loadCollection()"><a ng-class="{active:song_type===-1}">我的收藏</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right ">
+                <li class="sm-search" trigger="keyword && search(keyword)">
+                        <input type="text" class="form-control" ng-model="keyword">
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="sm-main">
+    <div class="container-fluid">
+    <table class="table"  >
+        <tbody>
+        <tr ng-repeat="song in song_list" ng-class="{current:song.song_id === current.song_id}">
+            <td class="fav" id="{{song.song_id}}">
+                {{$index+1}}
+            </td>
+            <td class="switch-song">
+                <a class="title sm-clickable" ng-click="play(song.song_id)">
+                    {{song.title}}
+                </a>
+            </td>
+            <td class="artisttd">
+                <a  class="artist" ng-click="queryArtistSongs(song.song_id)">{{song.artist_name || song.author}}</a>
+            </td>
+            <td class="share-wrapper">
+                <a class="share-song clickable" ng-click="collect(song)"><i class="fa " ng-class="{'fa-heart-o':!hasCollect(song),'fa-heart':hasCollect(song)}"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+<footer class="sm-footer navbar navbar-fixed-bottom">
+    <div class="sm-panel">
+        <div class="sm-left-panel">
+            <ul class="sm-play-btn">
+                <li ><a class="sm-clickable" ng-click="player.prev()"><i class="fa fa-step-backward"></i></a></li>
+                <li class="sm-play"><a class="sm-clickable" ng-click="player.getState() === 'playing'?player.pause():player.play()">
+                    <i class="fa" ng-class="{'fa-play':player.getState() !== 'playing','fa-pause':player.getState() === 'playing'}" ></i></a></li>
+                <li ><a class="sm-clickable" ng-click="player.next()"><i class="fa fa-step-forward"></i></a></li>
+            </ul>
+
+        </div>
+        <div class="sm-right-panel">
+            <div class="sm-play-btn">
+                <ul class="pull-left" style="padding-left: 0">
+                    <li style="width:30px"><a class="sm-clickable" ng-click="setMode()"><i class="fa" ng-class="modeStr"></i></a></li>
+                    <li style="width:30px;margin-left: 36px;margin-right: 15px"><a class="sm-clickable" ng-click="setMute()" >
+                        <i class="fa" ng-class="{'fa-volume-up':!mute,'fa-volume-off':mute}"></i></a></li>
+                </ul>
+                <div xl-volume-bar player="player" class="pull-left" style="width:150px;margin-top:16px">
+                </div>
+                <ul class="pull-left" >
+                    <li style="width:30px;"><a class="sm-clickable" ng-href="{{file_link}}" target="_blank"><i class="fa fa-download"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="sm-main-panel container-fluid">
+            <div class="sm-progress-title" >
+                <div class="pull-left">{{ current.title }}</div>
+                <div class="pull-right" xl-timer player="player"></div>
+            </div>
+            <xl-progress-bar player="player"></xl-progress-bar>
+
+        </div>
+    </div>
+</footer>
+<aside class="sm-fixed-right container-fluid">
+    <div class="sm-album-img center-block" ng-class="{'active':player.getState() === 'playing'}">
+        <image ng-src="{{current.pic_radio || 'resources/img/empty.jpg'}}"></image>
+    </div>
+    <div class="lrc-wrapper center-block" id="lrcWrap" >
+        <div class="no-lrc">
+            <div></div>
+        </div>
+        <xl-lrc-highlight player="player" lrc="lrc">
+        </xl-lrc-highlight>
+    </div>
+</aside>
