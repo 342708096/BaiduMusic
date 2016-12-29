@@ -273,7 +273,7 @@ define(['angularAMD'], function (angularAMD) {
       };
     }]);
   angularAMD.service('BaiduSongsAPI',['RestAPI',function(RestAPI){
-    var _api_url = 'http://tingapi.ting.baidu.com/v1/restserver/ting';
+    var _api_url = '//tingapi.ting.baidu.com/v1/restserver/ting';
     var _param = {
       from:'qianqian',
       version:'2.1.0',
